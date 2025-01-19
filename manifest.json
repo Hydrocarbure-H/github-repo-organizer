@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "GitHub Repo Organizer",
+    "version": "1.0",
+    "description": "Organise GitHub repositories into folders based on naming patterns.",
+    "permissions": ["storage"],
+    "host_permissions": ["https://github.com/*"],
+    "content_scripts": [
+      {
+        "matches": ["https://github.com/*"],
+        "js": ["content.js"],
+        "css": ["style.css"]
+      }
+    ],
+    "icons": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  }
+  
