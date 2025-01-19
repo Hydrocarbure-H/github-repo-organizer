@@ -5,7 +5,6 @@
 .menu-title {
     cursor: pointer;
     font-weight: bold;
-    background-color: #f0f0f0;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -13,7 +12,6 @@
 
 .menu-content {
     padding: 10px;
-    background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-top: 5px;
