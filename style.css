@@ -1,3 +1,4 @@
+/* Style commun */
 .menu-container {
     margin-bottom: 10px;
 }
@@ -11,8 +12,30 @@
 }
 
 .menu-content {
-    padding: 10px;
-    border: 1px solid #ccc;
     border-radius: 5px;
     margin-top: 5px;
+}
+
+/* Thème clair */
+@media (prefers-color-scheme: light) {
+    .menu-title {
+        background-color: #f9f9f9;
+        color: #333;
+    }
+
+    .menu-content {
+        background: rgba(240, 240, 240, 0.9);
+    }
+}
+
+/* Thème sombre */
+@media (prefers-color-scheme: dark) {
+    .menu-title {
+        background-color: #333;
+        color: #f9f9f9;
+    }
+
+    .menu-content {
+        background: rgba(50, 50, 50, 0.8);
+    }
 }
