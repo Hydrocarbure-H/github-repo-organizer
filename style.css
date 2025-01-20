@@ -6,33 +6,30 @@
 .menu-title {
     cursor: pointer;
     font-weight: bold;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 20px;
 }
 
 .menu-content {
-    border-radius: 5px;
-    margin-top: 5px;
+    /* margin-top: 5px; */
 }
 
 /* Thème clair */
 @media (prefers-color-scheme: light) {
     .menu-title {
-        background-color: #f9f9f9;
-        color: #333;
+        border-bottom: 1px solid #ccc;
     }
 
     .menu-content {
-        background: rgba(240, 240, 240, 0.9);
+        background-color: #f6f8fa;
     }
 }
 
 /* Thème sombre */
 @media (prefers-color-scheme: dark) {
     .menu-title {
-        background-color: #333;
-        color: #f9f9f9;
+        border-bottom: 1px solid #666;
+        /* background-color: #333; */
+        /* color: #fff; */
     }
 
     .menu-content {
