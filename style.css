@@ -9,14 +9,10 @@
     padding: 20px;
 }
 
-.menu-content {
-    /* margin-top: 5px; */
-}
-
 /* Thème clair */
 @media (prefers-color-scheme: light) {
     .menu-title {
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid #e3e3e4;
     }
 
     .menu-content {
@@ -26,13 +22,12 @@
 
 /* Thème sombre */
 @media (prefers-color-scheme: dark) {
+
     .menu-title {
-        border-bottom: 1px solid #666;
-        /* background-color: #333; */
-        /* color: #fff; */
+        border-bottom: 1px solid #2f3843;
     }
 
     .menu-content {
-        background: rgba(50, 50, 50, 0.8);
+        background: #151b23;
     }
 }

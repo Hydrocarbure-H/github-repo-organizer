@@ -129,7 +129,6 @@ function createCollapsibleMenu(repoGroups, repoListContainer) {
 
         menuContainer.appendChild(menuTitle);
         menuContainer.appendChild(menuContent);
-        // prepend
         repoListContainer.insertBefore(menuContainer, repoListContainer.firstChild);
     });
 }
