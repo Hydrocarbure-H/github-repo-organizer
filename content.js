@@ -20,6 +20,40 @@ function getRepositoriesContainer() {
 }
 
 /**
+ *  Check if the document is ready by verifying the presence of the repository container and its items.
+ * @returns {boolean} True if the document is ready, false otherwise.
+ */
+function is_document_ready() {
+    const repoListContainer = getRepositoriesContainer();
+    const repoItems = repoListContainer ? repoListContainer.querySelectorAll('li') : null;
+
+    if (!repoListContainer || !repoItems || repoItems.length === 0) {
+        console.log('Container or items not ready.');
+        return false;
+    }
+
+    // Check if each item has the necessary content loaded
+    for (const item of repoItems) {
+        const repoTitleNode = document.evaluate(
+            './/div[1]/h4/a/span',
+            item,
+            null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null
+        ).singleNodeValue;
+
+        if (!repoTitleNode || !repoTitleNode.textContent.trim()) {
+            console.log('Some items are missing their content.');
+            return false;
+        }
+    }
+
+    console.log('All items and their content are ready.');
+    return true;
+}
+
+
+/**
  * Get the repository elements and their titles.
  * @param {Element} repoListContainer - The container element holding the repository list.
  * @returns {Array<{node: Element, title: string}>} Array of repository titles and their DOM nodes.
@@ -123,5 +157,20 @@ function processRepositories() {
     createCollapsibleMenu(repoGroups, repoListContainer);
 }
 
-// Run the script
-processRepositories();
+window.onload = function() {
+    // // Run the script
+    processRepositories();
+}
+
+window.addEventListener('popstate', () => {
+    console.log('popstate event detected');
+    const intervalId = setInterval(() => {
+        if (is_document_ready()) {
+            console.log('Page loaded, processing repositories');
+            clearInterval(intervalId); // Stop checking
+            processRepositories();
+        } else {
+            console.log('Waiting for page to load...');
+        }
+    }, 100); // Check every 100ms
+});
