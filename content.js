@@ -121,6 +121,23 @@ function createCollapsibleMenu(repoGroups, repoListContainer) {
             menuContent.appendChild(node);
         });
 
+        // Remove the prefix in each MenuContent item
+        const menuContentItems = menuContent.querySelectorAll('li');
+        menuContentItems.forEach(item => {
+            const repoTitleNode = document.evaluate(
+                './/div[1]/h4/a/span',
+                item,
+                null,
+                XPathResult.FIRST_ORDERED_NODE_TYPE,
+                null
+            ).singleNodeValue;
+
+            if (repoTitleNode) {
+                const title = repoTitleNode.textContent.trim();
+                repoTitleNode.textContent = title.substring(prefix.length + 1);
+            }
+        });
+
         // Toggle visibility of the menu content
         menuTitle.addEventListener('click', () => {
             const isVisible = menuContent.style.display === 'block';

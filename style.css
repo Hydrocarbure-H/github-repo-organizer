@@ -1,12 +1,11 @@
-/* Style commun */
-.menu-container {
-    margin-bottom: 10px;
-}
-
 .menu-title {
     cursor: pointer;
     font-weight: bold;
     padding: 20px;
+}
+
+.menu-content {
+    padding-left: 20px;
 }
 
 /* Thème clair */
