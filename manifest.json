@@ -3,7 +3,7 @@
     "name": "GitHub Repo Organizer",
     "version": "1.0",
     "description": "Organise GitHub repositories into folders based on naming patterns.",
-    "permissions": ["storage"],
+    "permissions": [],
     "host_permissions": ["https://github.com/*"],
     "content_scripts": [
       {
