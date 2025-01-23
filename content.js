@@ -198,9 +198,9 @@ history.replaceState = function(...args) {
     return result;
 };
 
-// Listen for the custom locationchange event
-console.log("COUCOUCOU");
-window.addEventListener('hashchange', () => {
+
+// Listen if the url changes
+window.addEventListener('locationchange', () => {
     console.log('locationchange event detected');
     const intervalId = setInterval(() => {
         if (is_document_ready()) {
@@ -212,6 +212,7 @@ window.addEventListener('hashchange', () => {
         }
     }, 100); // Check every 100ms
 });
+
 
 window.addEventListener('popstate', () => {
     console.log('popstate event detected');
