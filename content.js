@@ -1,3 +1,32 @@
+let isOnRepositoriesPage = false;
+let hasProcessedRepositories = false;
+
+/**
+ * Check if the current page is the repositories page and process the repositories if it is.
+ */
+function checkPage() {
+    const currentUrl = window.location.href;
+    const isRepositoriesPage = currentUrl.includes('/repositories');
+
+    if (isRepositoriesPage && !isOnRepositoriesPage) {
+    
+        isOnRepositoriesPage = true;
+        hasProcessedRepositories = false;
+        console.log('Arrived on the repositories page');
+    } else if (!isRepositoriesPage && isOnRepositoriesPage) {
+    
+        isOnRepositoriesPage = false;
+        console.log('Left the repositories page');
+    }
+
+    if (isOnRepositoriesPage && !hasProcessedRepositories && is_document_ready()) {
+    
+        processRepositories();
+        hasProcessedRepositories = true;
+        console.log('Processed repositories');
+    }
+}
+
 /**
  * Get the container element that holds the list of repositories.
  * @returns {Element|null} The container element that holds the list of repositories, or null if not found.
@@ -173,56 +202,21 @@ function processRepositories() {
     createCollapsibleMenu(repoGroups, repoListContainer);
 }
 
-window.onload = function() {
-    // // Run the script
-    processRepositories();
+/**
+ * Start checking the page every 100ms. Yep, that's really ugly. This is the only way I have found
+ * to perform the execution of the processRepositories when the repositories page was clicked from any other page.
+ * With the previous way with popstate event and onload usage, it was working in all cases except
+ * when the repositories page was clicked from any other pages. In this case, the processRepositories
+ * was not executed.
+ * If anyone ever read this and have a better solution, please let me know !!!
+ * Is that the reason that this function is at the really end of the file ? Yep, absolutely.
+ */
+function startChecking() {
+    setInterval(checkPage, 100);
 }
 
-// Save the original methods
-const originalPushState = history.pushState;
-const originalReplaceState = history.replaceState;
 
-// Override pushState
-history.pushState = function(...args) {
-    console.log("PUSH STATE");
-    const result = originalPushState.apply(this, args);
-    window.dispatchEvent(new Event('locationchange'));
-    return result;
-};
-
-// Override replaceState
-history.replaceState = function(...args) {
-    console.log("REPLACE STATE");
-    const result = originalReplaceState.apply(this, args);
-    window.dispatchEvent(new Event('locationchange'));
-    return result;
-};
-
-
-// Listen if the url changes
-window.addEventListener('locationchange', () => {
-    console.log('locationchange event detected');
-    const intervalId = setInterval(() => {
-        if (is_document_ready()) {
-            console.log('Page loaded, processing repositories');
-            clearInterval(intervalId); // Stop checking
-            processRepositories();
-        } else {
-            console.log('Waiting for page to load...');
-        }
-    }, 100); // Check every 100ms
-});
-
-
-window.addEventListener('popstate', () => {
-    console.log('popstate event detected');
-    const intervalId = setInterval(() => {
-        if (is_document_ready()) {
-            console.log('Page loaded, processing repositories');
-            clearInterval(intervalId); // Stop checking
-            processRepositories();
-        } else {
-            console.log('Waiting for page to load...');
-        }
-    }, 100); // Check every 100ms
-});
+window.onload = function() {
+    // Run the script
+    startChecking();
+}
