@@ -178,6 +178,41 @@ window.onload = function() {
     processRepositories();
 }
 
+// Save the original methods
+const originalPushState = history.pushState;
+const originalReplaceState = history.replaceState;
+
+// Override pushState
+history.pushState = function(...args) {
+    console.log("PUSH STATE");
+    const result = originalPushState.apply(this, args);
+    window.dispatchEvent(new Event('locationchange'));
+    return result;
+};
+
+// Override replaceState
+history.replaceState = function(...args) {
+    console.log("REPLACE STATE");
+    const result = originalReplaceState.apply(this, args);
+    window.dispatchEvent(new Event('locationchange'));
+    return result;
+};
+
+// Listen for the custom locationchange event
+console.log("COUCOUCOU");
+window.addEventListener('hashchange', () => {
+    console.log('locationchange event detected');
+    const intervalId = setInterval(() => {
+        if (is_document_ready()) {
+            console.log('Page loaded, processing repositories');
+            clearInterval(intervalId); // Stop checking
+            processRepositories();
+        } else {
+            console.log('Waiting for page to load...');
+        }
+    }, 100); // Check every 100ms
+});
+
 window.addEventListener('popstate', () => {
     console.log('popstate event detected');
     const intervalId = setInterval(() => {
