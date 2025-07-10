@@ -33,7 +33,7 @@ function checkPage() {
  */
 function getRepositoriesContainer() {
     const repoListContainer = document.evaluate(
-        '//*[@id=":R5ab:-list-view-container"]/ul',
+        '//*[@id=":R1ab:-list-view-container"]/ul',
         document,
         null,
         XPathResult.FIRST_ORDERED_NODE_TYPE,
