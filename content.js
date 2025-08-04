@@ -32,16 +32,53 @@ function checkPage() {
  * @returns {Element|null} The container element that holds the list of repositories, or null if not found.
  */
 function getRepositoriesContainer() {
-    const repoListContainer = document.evaluate(
-        '//*[@id=":Rl1d:-list-view-container"]/ul',
+    // Try multiple approaches to find the repository list container
+    let repoListContainer = null;
+    
+    // Method 1: Use pattern matching for the dynamic ID (most flexible)
+    repoListContainer = document.evaluate(
+        '//*[contains(@id, "-list-view-container") and starts-with(@id, ":R")]/ul',
         document,
         null,
         XPathResult.FIRST_ORDERED_NODE_TYPE,
         null
     ).singleNodeValue;
+    
+    // Method 2: Fallback to specific known IDs
+    if (!repoListContainer) {
+        const knownIds = [':Rl1d:', ':R5ab:', ':R1ab:'];
+        for (const id of knownIds) {
+            repoListContainer = document.evaluate(
+                `//*[@id="${id}-list-view-container"]/ul`,
+                document,
+                null,
+                XPathResult.FIRST_ORDERED_NODE_TYPE,
+                null
+            ).singleNodeValue;
+            
+            if (repoListContainer) {
+                console.log(`Found repository container with ID: ${id}`);
+                break;
+            }
+        }
+    }
+    
+    // Method 3: Last resort - look for any ul that contains repository items
+    if (!repoListContainer) {
+        const allUls = document.querySelectorAll('ul');
+        for (const ul of allUls) {
+            // Check if this ul contains repository-like items
+            const hasRepoItems = ul.querySelector('li h4 a span');
+            if (hasRepoItems && ul.children.length > 0) {
+                repoListContainer = ul;
+                console.log('Found repository container using fallback method');
+                break;
+            }
+        }
+    }
 
     if (!repoListContainer) {
-        console.error("Repository list container not found.");
+        console.error("Repository list container not found with any method.");
         return null;
     }
 

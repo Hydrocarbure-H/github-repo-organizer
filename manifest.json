@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "GitHub Repo Organizer",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "Organise GitHub repositories into folders based on naming patterns.",
     "permissions": [],
     "host_permissions": ["https://github.com/*"],
