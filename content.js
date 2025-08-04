@@ -180,6 +180,61 @@ function createCollapsibleMenu(repoGroups, repoListContainer) {
 }
 
 /**
+ * Create a collapsible menu for landing repositories that are not already grouped.
+ * @param {Array<Element>} landingNodes - Array of landing repository nodes.
+ * @param {Element} repoListContainer - The container element holding the repository list.
+ */
+function createLandingMenu(landingNodes, repoListContainer) {
+    if (landingNodes.length < 2) return; // Skip if fewer than two landing repositories
+
+    // Create a container for the landing menu
+    const menuContainer = document.createElement('div');
+    menuContainer.classList.add('menu-container');
+
+    const menuTitle = document.createElement('div');
+    menuTitle.classList.add('menu-title');
+    menuTitle.textContent = 'LANDING';
+
+    const menuContent = document.createElement('div');
+    menuContent.classList.add('menu-content');
+    menuContent.style.display = 'none';
+
+    // Move landing repository nodes into the menu content
+    landingNodes.forEach(node => {
+        menuContent.appendChild(node);
+    });
+
+    // Remove the "-landing" suffix in each menu content item
+    const menuContentItems = menuContent.querySelectorAll('li');
+    menuContentItems.forEach(item => {
+        const repoTitleNode = document.evaluate(
+            './/div[1]/h4/a/span',
+            item,
+            null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null
+        ).singleNodeValue;
+
+        if (repoTitleNode) {
+            const title = repoTitleNode.textContent.trim();
+            if (title.endsWith('-landing')) {
+                repoTitleNode.textContent = title.substring(0, title.length - 8); // Remove "-landing"
+            }
+        }
+    });
+
+    // Toggle visibility of the menu content
+    menuTitle.addEventListener('click', () => {
+        const isVisible = menuContent.style.display === 'block';
+        menuContent.style.display = isVisible ? 'none' : 'block';
+    });
+
+    menuContainer.appendChild(menuTitle);
+    menuContainer.appendChild(menuContent);
+    repoListContainer.appendChild(menuContainer);
+}
+
+/**
  * Main function to process repositories and create collapsible menus while preserving ungrouped items.
  */
 function processRepositories() {
@@ -194,12 +249,38 @@ function processRepositories() {
         .filter(({ title }) => repoGroups[title.split('-')[0]].length < 2)
         .map(({ node }) => node);
 
-    // Clear the container and reinsert orphan nodes
+    // Separate landing repositories from orphan nodes (only those not already grouped)
+    const landingNodes = [];
+    const finalOrphanNodes = [];
+    
+    orphanNodes.forEach(node => {
+        // Get the title from the node
+        const repoTitleNode = document.evaluate(
+            './/div[1]/h4/a/span',
+            node,
+            null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null
+        ).singleNodeValue;
+        
+        const title = repoTitleNode ? repoTitleNode.textContent.trim() : '';
+        
+        if (title.endsWith('-landing')) {
+            landingNodes.push(node);
+        } else {
+            finalOrphanNodes.push(node);
+        }
+    });
+
+    // Clear the container and reinsert final orphan nodes
     repoListContainer.innerHTML = '';
-    orphanNodes.forEach(node => repoListContainer.appendChild(node));
+    finalOrphanNodes.forEach(node => repoListContainer.appendChild(node));
 
     // Create collapsible menus for grouped repositories
     createCollapsibleMenu(repoGroups, repoListContainer);
+    
+    // Create landing menu for ungrouped landing repositories
+    createLandingMenu(landingNodes, repoListContainer);
 }
 
 /**
